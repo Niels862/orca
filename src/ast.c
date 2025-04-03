@@ -3,6 +3,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
+orca_ast_descriptor_t tokenrange_descriptor = {
+    "tokenrange", ORCA_NODE_TOKENRANGE,
+    {
+        { "start",      ORCA_DATATYPE_TOKEN },
+        { "end",        ORCA_DATATYPE_TOKEN }
+    }
+};
+
 orca_ast_descriptor_t integer_descriptor = {
     "integer", ORCA_NODE_INTEGER,
     {
@@ -36,6 +44,7 @@ orca_ast_descriptor_t arg_descriptor = {
 
 orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind) {
     static orca_ast_descriptor_t *descriptors[ORCA_N_NODES] = {
+        [ORCA_NODE_TOKENRANGE]      = &tokenrange_descriptor,
         [ORCA_NODE_INTEGER]         = &integer_descriptor,
         [ORCA_NODE_IDENTIFIER]      = &identifier_descriptor,
         [ORCA_NODE_CALL]            = &call_descriptor,

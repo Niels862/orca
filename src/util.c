@@ -2,6 +2,7 @@
 #include "classify.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <stdarg.h>
 #include <assert.h>
 
@@ -123,4 +124,24 @@ void orca_range_error(char const *string,
     fprintf(stderr, ORCA_ANSI_RESET);
     
     va_end(args);
+}
+
+void orca_char_repr(char c, FILE *file) {
+    if (isprint(c)) {
+        fprintf(file, "%c", c);
+        return;
+    }
+
+    switch (c) {
+        case '\n':  fprintf(file, "\\n");           break;
+        case '\r':  fprintf(file, "\\r");           break;
+        case '\t':  fprintf(file, "\\t");           break;
+        default:    fprintf(file, "\\x%02X", c);    break;
+    }
+}
+
+void orca_string_repr(char const *start, char const *end, FILE *file) {    
+    for (char const *s = start; s != end; s++) {
+        orca_char_repr(*s, file);
+    }
 }

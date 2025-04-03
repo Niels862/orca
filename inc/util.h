@@ -27,4 +27,8 @@ void orca_range_error(char const *string, orca_text_position_t *start,
                       orca_text_position_t *end,
                       char const *fmt, ...);
 
+void orca_char_repr(char c, FILE *file);
+
+void orca_string_repr(char const *start, char const *end, FILE *file);
+
 #endif

@@ -1,4 +1,5 @@
 #include "token.h"
+#include "util.h"
 #include <stdlib.h>
 #include <stddef.h>
 #include <assert.h>
@@ -54,8 +55,7 @@ void orca_token_write(orca_token_t *token, FILE *file) {
     }
 
     orca_text_position_write(&token->pos, file);
-    fprintf(file, ": <%s>: '%.*s'", 
-            orca_tokenkind_string(token->kind),
-            (int)(token->end - token->start), 
-            token->start);
+    fprintf(file, ": <%s>: '", orca_tokenkind_string(token->kind));
+    orca_string_repr(token->start, token->end, file);
+    fprintf(file, "'");
 }

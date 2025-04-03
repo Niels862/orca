@@ -1,4 +1,6 @@
 #include "lexer.h"
+#include "parse-structure.h"
+#include "parse-context.h"
 #include "util.h"
 #include "ast.h"
 #include <stdlib.h>
@@ -35,13 +37,14 @@ int main(int argc, char *argv[]) {
         curr++;
     }
 
-    free(text);
-    free(tokens);
+    orca_ast_node_t *node = orca_parse_structure(tokens);
 
-    orca_ast_node_t *node = orca_ast_integer_new(NULL);
     orca_ast_write(node, 0, stderr);
     fprintf(stderr, "\n");
     orca_ast_free(node);
+
+    free(text);
+    free(tokens);
 
     return 0;
 }
