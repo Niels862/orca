@@ -48,6 +48,11 @@ void orca_token_init(orca_token_t *token, orca_tokenkind_t kind,
 }
 
 void orca_token_write(orca_token_t *token, FILE *file) {
+    if (token == NULL) {
+        fprintf(file, "(null)");
+        return;
+    }
+
     orca_text_position_write(&token->pos, file);
     fprintf(file, ": <%s>: '%.*s'", 
             orca_tokenkind_string(token->kind),

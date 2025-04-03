@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "util.h"
+#include "ast.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -36,6 +37,11 @@ int main(int argc, char *argv[]) {
 
     free(text);
     free(tokens);
+
+    orca_ast_node_t *node = orca_ast_integer_new(NULL);
+    orca_ast_write(node, 0, stderr);
+    fprintf(stderr, "\n");
+    orca_ast_free(node);
 
     return 0;
 }
