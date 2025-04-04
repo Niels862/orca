@@ -10,6 +10,7 @@
 typedef enum {
     ORCA_NODE_NONE,
     
+    ORCA_NODE_LIST,
     ORCA_NODE_TOKENRANGE,
 
     ORCA_NODE_INTEGER,
@@ -29,6 +30,7 @@ typedef struct orca_ast_node_t {
 
     union {
         struct orca_ast_node_t *node;
+        struct orca_ast_node_t **nodes;
         orca_token_t *token;
         int64_t int64;
     } attrs[];
@@ -46,6 +48,13 @@ typedef struct {
     orca_nodekind_t kind;
     orca_ast_attr_t attrs[ORCA_MAX_AST_ATTRS];
 } orca_ast_descriptor_t;
+
+typedef struct {
+    orca_ast_base_t base;
+    orca_ast_node_t **list;
+    size_t size;
+    size_t cap;
+} orca_ast_list_t;
 
 typedef struct {
     orca_ast_base_t base;
@@ -80,7 +89,15 @@ orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind);
 
 void orca_ast_free(orca_ast_node_t *node);
 
+void orca_ast_list_free(orca_ast_node_t **nodes);
+
 void orca_ast_write(orca_ast_node_t *node, size_t depth, FILE *file);
+
+void orca_ast_list_write(orca_ast_node_t **nodes, size_t depth, FILE *file);
+
+orca_ast_node_t *orca_ast_list_new();
+
+void orca_ast_list_append(orca_ast_node_t *node, orca_ast_node_t *elem);
 
 orca_ast_node_t *orca_ast_tokenrange_new(orca_token_t *start, 
                                          orca_token_t *end);

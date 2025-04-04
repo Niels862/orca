@@ -23,4 +23,6 @@ orca_ast_node_t *orca_parse_bracketed(orca_parser_t *parser);
 
 orca_ast_node_t *orca_parse_call(orca_parser_t *parser, orca_ast_node_t *func);
 
+orca_ast_node_t *orca_parse_args(orca_parser_t *parser);
+
 #endif
