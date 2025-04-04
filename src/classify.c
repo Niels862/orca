@@ -36,11 +36,11 @@ bool orca_is_newline(uint32_t c) {
 orca_tokenkind_t orca_map_special(uint32_t c) {
     switch (c) {
         case '[':   return ORCA_TOKEN_LEFTBRACKET;
-        case ']':   return ORCA_TOKEN_RIGHTBRACE;
+        case ']':   return ORCA_TOKEN_RIGHTBRACKET;
         case '{':   return ORCA_TOKEN_LEFTBRACE;
         case '}':   return ORCA_TOKEN_RIGHTBRACE;
         case '(':   return ORCA_TOKEN_LEFTPAREN;
-        case ')':   return ORCA_TOKEN_RIGHTBRACE;
+        case ')':   return ORCA_TOKEN_RIGHTPAREN;
         case ';':   return ORCA_TOKEN_SEMICOLON;
         case ',':   return ORCA_TOKEN_COMMA;
         case '.':   return ORCA_TOKEN_DOT;

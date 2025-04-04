@@ -20,4 +20,6 @@ orca_token_t *orca_parser_accept(orca_parser_t *parser, orca_tokenkind_t kind);
 
 orca_token_t *orca_parser_expect(orca_parser_t *parser, orca_tokenkind_t kind);
 
+void orca_parser_expect_error(orca_parser_t *parser, char const *expected);
+
 #endif

@@ -39,8 +39,11 @@ orca_token_t *orca_parser_expect(orca_parser_t *parser, orca_tokenkind_t kind) {
         return token;
     }
 
-    orca_token_error(token, "expected %s, but got %s", 
-                     orca_tokenkind_string(kind), 
-                     orca_tokenkind_string(token->kind));
+    orca_parser_expect_error(parser, orca_tokenkind_string(kind));
     return NULL;
+}
+
+void orca_parser_expect_error(orca_parser_t *parser, char const *expected) {
+    orca_token_error(parser->curr, "expected %s, but got %s", expected, 
+                     orca_tokenkind_string(parser->curr->kind));        
 }
