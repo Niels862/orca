@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <stdarg.h>
 #include <assert.h>
 
 void *orca_xmalloc(size_t size) {
@@ -99,9 +98,7 @@ void orca_token_error(orca_token_t *token, char const *fmt, ...) {
 
     va_list args;
     va_start(args, fmt);
-
-    orca_range_error(token->start, &token->pos, &end, fmt, args);
-
+    orca_range_error_va(token->start, &token->pos, &end, fmt, args);
     va_end(args);
 }
 
@@ -126,6 +123,22 @@ void orca_range_error(char const *string,
     va_end(args);
 }
 
+void orca_range_error_va(char const *string, 
+                         orca_text_position_t *start, 
+                         orca_text_position_t *end,
+                         char const *fmt, va_list args) {  
+    fprintf(stderr, ORCA_ANSI_ERROR);
+    
+    orca_text_position_write(start, stderr);
+    fprintf(stderr, ": ");
+    vfprintf(stderr, fmt, args);
+    fprintf(stderr, "\n");
+    
+    orca_context_line_write(string, start, end, stderr);
+
+    fprintf(stderr, ORCA_ANSI_RESET);
+}
+
 void orca_char_repr(char c, FILE *file) {
     if (isprint(c)) {
         fprintf(file, "%c", c);
@@ -144,4 +157,26 @@ void orca_string_repr(char const *start, char const *end, FILE *file) {
     for (char const *s = start; s != end; s++) {
         orca_char_repr(*s, file);
     }
+}
+
+int64_t orca_string_to_int64(char const *start, char const *end) {
+    int64_t res = 0;
+    int64_t max_div_10 = INT64_MAX / 10;
+    int64_t max_mod_10 = INT64_MAX % 10;
+    
+    for (const char *ptr = start; ptr < end; ++ptr) {
+        if (*ptr == '_') continue;;
+
+        assert (*ptr >= '0' && *ptr <= '9');
+        
+        int digit = *ptr - '0';
+        if (res > max_div_10 || (res == max_div_10 && digit > max_mod_10)) {
+            return -1;
+        }
+        
+        res = res * 10 + digit;
+    }
+    
+    return res;
+
 }

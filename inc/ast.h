@@ -85,7 +85,7 @@ void orca_ast_write(orca_ast_node_t *node, size_t depth, FILE *file);
 orca_ast_node_t *orca_ast_tokenrange_new(orca_token_t *start, 
                                          orca_token_t *end);
 
-orca_ast_node_t *orca_ast_integer_new(orca_token_t *token);
+orca_ast_node_t *orca_ast_integer_new(orca_token_t *token, int64_t value);
 
 orca_ast_node_t *orca_ast_identifier_new(orca_token_t *token);
 

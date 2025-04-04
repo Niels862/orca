@@ -123,12 +123,12 @@ orca_ast_node_t *orca_ast_tokenrange_new(orca_token_t *start,
     return (orca_ast_node_t *)node;
 }
 
-orca_ast_node_t *orca_ast_integer_new(orca_token_t *token) {
+orca_ast_node_t *orca_ast_integer_new(orca_token_t *token, int64_t value) {
     orca_ast_integer_t *node = orca_xmalloc(sizeof(orca_ast_integer_t));
 
     node->base.kind = ORCA_NODE_INTEGER;
     node->token = token;
-    node->value = 42; // todo
+    node->value = value;
 
     return (orca_ast_node_t *)node;
 }

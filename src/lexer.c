@@ -49,6 +49,7 @@ orca_token_t *orca_lex(char const *filename, char const *text) {
         }
     }
 
+    orca_lexer_add(&lexer, ORCA_TOKEN_EOF);
     orca_lexer_add(&lexer, ORCA_TOKEN_ENDSOURCE);
 
     return lexer.tokens.list;

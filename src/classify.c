@@ -14,7 +14,7 @@ bool orca_is_integer_start(uint32_t c) {
 }
 
 bool orca_is_integer_continue(uint32_t c) {
-    return isdigit(c);
+    return isdigit(c) || c == '_';
 }
 
 bool orca_is_special(uint32_t c) {

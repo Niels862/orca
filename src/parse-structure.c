@@ -13,7 +13,14 @@ orca_ast_node_t *orca_parse_structure(orca_token_t *tokens) {
         return NULL;
     }
 
-    return orca_preparse_expr(&parser);
+    orca_ast_node_t *node = orca_preparse_expr(&parser);
+
+    /* if (!orca_parser_expect(&parser, ORCA_TOKEN_EOF)) {
+        orca_ast_free(node);
+        return NULL;
+    } */ // commented out while structure parser cannot handle full program
+
+    return node;
 }
 
 orca_ast_node_t *orca_preparse_expr(orca_parser_t *parser) {
@@ -29,7 +36,6 @@ orca_ast_node_t *orca_preparse_expr(orca_parser_t *parser) {
             case ORCA_TOKEN_RIGHTBRACE:
             case ORCA_TOKEN_LEFTPAREN:
             case ORCA_TOKEN_RIGHTPAREN:
-            case ORCA_TOKEN_SEMICOLON:
             case ORCA_TOKEN_COMMA:
             case ORCA_TOKEN_DOT:
             case ORCA_TOKEN_PLUS:

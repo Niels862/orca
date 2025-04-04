@@ -29,6 +29,7 @@ char const *orca_tokenkind_string(orca_tokenkind_t kind) {
         [ORCA_TOKEN_EXCLAMATION_MARK]   = "!",
         [ORCA_TOKEN_PIPE]               = "|",
         [ORCA_TOKEN_AMPERSAND]          = "&",
+        [ORCA_TOKEN_EOF]                = "end of file",
         [ORCA_TOKEN_STARTSOURCE]        = "start-source",
         [ORCA_TOKEN_ENDSOURCE]          = "end-source",
     };

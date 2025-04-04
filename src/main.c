@@ -39,9 +39,17 @@ int main(int argc, char *argv[]) {
 
     orca_ast_node_t *node = orca_parse_structure(tokens);
 
-    orca_ast_write(node, 0, stderr);
-    fprintf(stderr, "\n");
-    orca_ast_free(node);
+    if (node != NULL) {
+        orca_ast_write(node, 0, stderr);
+        fprintf(stderr, "\n");
+
+        if (orca_parse_expr_tokenrange(&node)) {
+            orca_ast_write(node, 0, stderr);
+            fprintf(stderr, "\n");
+        }
+
+        orca_ast_free(node);
+    }
 
     free(text);
     free(tokens);
