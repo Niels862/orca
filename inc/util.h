@@ -40,6 +40,8 @@ void orca_char_repr(char c, FILE *file);
 
 void orca_string_repr(char const *start, char const *end, FILE *file);
 
+void orca_write_n_chars(int n, char c, FILE *file);
+
 int64_t orca_string_to_int64(char const *start, char const *end);
 
 #endif

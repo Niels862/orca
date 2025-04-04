@@ -59,6 +59,10 @@ orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind) {
 }
 
 void orca_ast_free(orca_ast_node_t *node) {
+    if (node == NULL) {
+        return;
+    }
+
     orca_ast_descriptor_t *desc = orca_ast_descriptor(node->base.kind);
 
     for (size_t i = 0; i < ORCA_MAX_AST_ATTRS; i++) {
@@ -71,9 +75,17 @@ void orca_ast_free(orca_ast_node_t *node) {
 }
 
 void orca_ast_write(orca_ast_node_t *node, size_t depth, FILE *file) {
+    if (node == NULL) {
+        fprintf(file, "(null)");
+        return;
+    }
+
     orca_ast_descriptor_t *desc = orca_ast_descriptor(node->base.kind);
 
     fprintf(file, "{\n");
+    orca_write_n_chars(depth + 1, ' ', file);
+    fprintf(file, "kind: %s,\n", desc->name);
+
     for (size_t i = 0; i < ORCA_MAX_AST_ATTRS; i++) {
         orca_ast_attr_t *attr = &desc->attrs[i];
 
@@ -81,9 +93,7 @@ void orca_ast_write(orca_ast_node_t *node, size_t depth, FILE *file) {
             continue;
         }
 
-        for (size_t i = 0; i < depth + 1; i++) {
-            fprintf(file, " "); // todo optimalize
-        }
+        orca_write_n_chars(depth + 1, ' ', file);
         fprintf(file, "%s: ", attr->name);
 
         switch (attr->type) {
@@ -106,9 +116,7 @@ void orca_ast_write(orca_ast_node_t *node, size_t depth, FILE *file) {
         fprintf(file, ",\n");
     }
 
-    for (size_t i = 0; i < depth; i++) {
-        fprintf(file, " ");
-    }
+    orca_write_n_chars(depth, ' ', file);
     fprintf(file, "}");
 }
 

@@ -159,6 +159,12 @@ void orca_string_repr(char const *start, char const *end, FILE *file) {
     }
 }
 
+void orca_write_n_chars(int n, char c, FILE *file) {
+    for (int i = 0; i < n; i++) {
+        putc(c, file);
+    }
+}
+
 int64_t orca_string_to_int64(char const *start, char const *end) {
     int64_t res = 0;
     int64_t max_div_10 = INT64_MAX / 10;

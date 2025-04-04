@@ -29,7 +29,21 @@ orca_ast_node_t *orca_parse_expr(orca_parser_t *parser) {
 }
 
 orca_ast_node_t *orca_parse_value(orca_parser_t *parser) {
-    return orca_parse_atom(parser);
+    orca_ast_node_t *value = orca_parse_atom(parser);
+    if (value == NULL) {
+        return NULL;
+    }
+
+    while (true) {
+        switch (parser->curr->kind) {
+            case ORCA_TOKEN_LEFTPAREN:
+                value = orca_parse_call(parser, value);
+                break;
+    
+            default:
+                return value;
+        }
+    }
 }
 
 orca_ast_node_t *orca_parse_atom(orca_parser_t *parser) {
@@ -75,13 +89,33 @@ orca_ast_node_t *orca_parse_integer(orca_parser_t *parser) {
 }
 
 orca_ast_node_t *orca_parse_bracketed(orca_parser_t *parser) {
-    orca_parser_expect(parser, ORCA_TOKEN_LEFTPAREN);
+    if (orca_parser_expect(parser, ORCA_TOKEN_LEFTPAREN) == NULL) {
+        return NULL;
+    }
 
     orca_ast_node_t *node = orca_parse_expr(parser);
     if (node == NULL) {
         return NULL;
     }
 
-    orca_parser_expect(parser, ORCA_TOKEN_RIGHTPAREN);
+    if (orca_parser_expect(parser, ORCA_TOKEN_RIGHTPAREN) == NULL) {
+        orca_ast_free(node);
+        return NULL;
+    }
+    
     return node;
+}
+
+orca_ast_node_t *orca_parse_call(orca_parser_t *parser, orca_ast_node_t *func) {
+    if (orca_parser_expect(parser, ORCA_TOKEN_LEFTPAREN) == NULL) {
+        orca_ast_free(func);
+        return NULL;
+    }
+
+    if (orca_parser_expect(parser, ORCA_TOKEN_RIGHTPAREN) == NULL) {
+        orca_ast_free(func);
+        return NULL;
+    }
+
+    return orca_ast_call_new(func, NULL);
 }
