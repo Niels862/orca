@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main(int argc, char *argv[]) {
+#include "vm.h"
+
+int test_parse(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "%s [filename]\n", argv[0]);
         return 1;
@@ -53,6 +55,34 @@ int main(int argc, char *argv[]) {
 
     free(text);
     free(tokens);
+
+    return 0;
+}
+
+void test_vm() {
+    orca_Object_t *intg = &orca_Int_new(42)->object;
+    orca_Object_t *consts[1];
+    consts[0] = intg;
+
+    orca_instr_t instrs[] = {
+        { ORCA_OP_LOAD_NULL,    0 },
+        { ORCA_OP_LOAD_CONST,   0 },
+        { ORCA_OP_TEMP_PRINT,   0 },
+        { ORCA_OP_EXIT,         0 }
+    };
+
+    orca_vm_t vm;
+    orca_vm_init(&vm, instrs, consts);
+
+    orca_vm_run(&vm);
+
+    orca_vm_destruct(&vm);
+}
+
+int main(int argc, char *argv[]) {
+    ORCA_UNUSED(argc), ORCA_UNUSED(argv);
+
+    test_vm();
 
     return 0;
 }

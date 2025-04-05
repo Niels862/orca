@@ -20,7 +20,7 @@ orca_ast_descriptor_t program_descriptor = {
 orca_ast_descriptor_t expr_stmt_descriptor = {
     "expr-stmt", ORCA_NODE_EXPR_STMT,
     {
-        { "expr-stmt",  ORCA_DATATYPE_AST_NODE }
+        { "expr",       ORCA_DATATYPE_AST_NODE }
     }
 };
 
