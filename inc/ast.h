@@ -16,7 +16,6 @@ typedef enum {
     ORCA_NODE_INTEGER,
     ORCA_NODE_IDENTIFIER,
     ORCA_NODE_CALL,
-    ORCA_NODE_ARG,
 
     ORCA_N_NODES
 } orca_nodekind_t;
@@ -79,12 +78,6 @@ typedef struct {
     orca_ast_node_t *args;
 } orca_ast_call_t;
 
-typedef struct {
-    orca_ast_base_t base;
-    orca_ast_node_t *expr;
-    orca_ast_node_t *next;
-} orca_ast_arg_t;
-
 orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind);
 
 void orca_ast_free(orca_ast_node_t *node);
@@ -108,7 +101,5 @@ orca_ast_node_t *orca_ast_identifier_new(orca_token_t *token);
 
 orca_ast_node_t *orca_ast_call_new(orca_ast_node_t *func, 
                                    orca_ast_node_t *args);
-
-orca_ast_node_t *orca_ast_arg_new(orca_ast_node_t *expr);
 
 #endif

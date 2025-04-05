@@ -41,14 +41,6 @@ orca_ast_descriptor_t call_descriptor = {
     }
 };
 
-orca_ast_descriptor_t arg_descriptor = {
-    "arg", ORCA_NODE_ARG,
-    {
-        { "expr", ORCA_DATATYPE_AST_NODE },
-        { "next", ORCA_DATATYPE_AST_NODE }
-    }
-};
-
 orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind) {
     static orca_ast_descriptor_t *descriptors[ORCA_N_NODES] = {
         [ORCA_NODE_LIST]            = &list_descriptor,
@@ -56,7 +48,6 @@ orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind) {
         [ORCA_NODE_INTEGER]         = &integer_descriptor,
         [ORCA_NODE_IDENTIFIER]      = &identifier_descriptor,
         [ORCA_NODE_CALL]            = &call_descriptor,
-        [ORCA_NODE_ARG]             = &arg_descriptor
     };
 
     assert(kind < ORCA_N_NODES);
@@ -232,16 +223,6 @@ orca_ast_node_t *orca_ast_call_new(orca_ast_node_t *func,
     node->base.kind = ORCA_NODE_CALL;
     node->func = func;
     node->args = args;
-
-    return (orca_ast_node_t *)node;
-}
-
-orca_ast_node_t *orca_ast_arg_new(orca_ast_node_t *expr) {
-    orca_ast_arg_t *node = orca_xmalloc(sizeof(orca_ast_arg_t));
-
-    node->base.kind = ORCA_NODE_ARG;
-    node->expr = expr;
-    node->next = NULL;
 
     return (orca_ast_node_t *)node;
 }
