@@ -10,6 +10,20 @@ orca_ast_descriptor_t list_descriptor = {
     }
 };
 
+orca_ast_descriptor_t program_descriptor = {
+    "program", ORCA_NODE_PROGRAM,
+    {
+        { "stmts",      ORCA_DATATYPE_AST_NODE }
+    }
+};
+
+orca_ast_descriptor_t expr_stmt_descriptor = {
+    "expr-stmt", ORCA_NODE_EXPR_STMT,
+    {
+        { "expr-stmt",  ORCA_DATATYPE_AST_NODE }
+    }
+};
+
 orca_ast_descriptor_t tokenrange_descriptor = {
     "tokenrange", ORCA_NODE_TOKENRANGE,
     {
@@ -44,6 +58,8 @@ orca_ast_descriptor_t call_descriptor = {
 orca_ast_descriptor_t *orca_ast_descriptor(orca_nodekind_t kind) {
     static orca_ast_descriptor_t *descriptors[ORCA_N_NODES] = {
         [ORCA_NODE_LIST]            = &list_descriptor,
+        [ORCA_NODE_PROGRAM]         = &program_descriptor,
+        [ORCA_NODE_EXPR_STMT]       = &expr_stmt_descriptor,
         [ORCA_NODE_TOKENRANGE]      = &tokenrange_descriptor,
         [ORCA_NODE_INTEGER]         = &integer_descriptor,
         [ORCA_NODE_IDENTIFIER]      = &identifier_descriptor,
@@ -184,6 +200,24 @@ void orca_ast_list_append(orca_ast_node_t *list, orca_ast_node_t *elem) {
     node->list[node->size] = elem;
     node->list[node->size + 1] = NULL;
     node->size++;
+}
+
+orca_ast_node_t *orca_ast_program_new(orca_ast_node_t *stmts) {
+    ast_program_t *node = orca_xmalloc(sizeof(ast_program_t));
+
+    node->base.kind = ORCA_NODE_PROGRAM;
+    node->stmts = stmts;
+
+    return (orca_ast_node_t *)node;
+}
+
+orca_ast_node_t *orca_ast_expr_stmt_new(orca_ast_node_t *expr) {
+    orca_ast_expr_stmt_t *node = orca_xmalloc(sizeof(orca_ast_expr_stmt_t));
+
+    node->base.kind = ORCA_NODE_EXPR_STMT;
+    node->expr = expr;
+
+    return (orca_ast_node_t *)node;
 }
 
 orca_ast_node_t *orca_ast_tokenrange_new(orca_token_t *start, 

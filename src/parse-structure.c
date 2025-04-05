@@ -2,7 +2,7 @@
 
 orca_ast_node_t *orca_parse_structure(orca_token_t *tokens) {
     orca_token_t *end = tokens;
-    while (end->kind != ORCA_TOKEN_ENDSOURCE) {
+    while (end->kind != ORCA_TOKEN_EOF) {
         end++;
     }
 
@@ -13,14 +13,29 @@ orca_ast_node_t *orca_parse_structure(orca_token_t *tokens) {
         return NULL;
     }
 
-    orca_ast_node_t *node = orca_preparse_expr(&parser);
+    orca_ast_node_t *stmts = orca_ast_list_new();
+    while (!orca_parser_done(&parser)) {
+        orca_ast_node_t *stmt = orca_parse_statement(&parser);
+        if (stmt == NULL) {
+            orca_ast_free(stmts);
+            return NULL;
+        }
 
-    /* if (!orca_parser_expect(&parser, ORCA_TOKEN_EOF)) {
+        orca_ast_list_append(stmts, stmt);
+    }
+
+    return orca_ast_program_new(stmts);
+}
+
+orca_ast_node_t *orca_parse_statement(orca_parser_t *parser) {
+    orca_ast_node_t *node = orca_preparse_expr(parser);
+
+    if (orca_parser_expect(parser, ORCA_TOKEN_SEMICOLON) == NULL) {
         orca_ast_free(node);
         return NULL;
-    } */ // commented out while structure parser cannot handle full program
+    }
 
-    return node;
+    return orca_ast_expr_stmt_new(node);
 }
 
 orca_ast_node_t *orca_preparse_expr(orca_parser_t *parser) {

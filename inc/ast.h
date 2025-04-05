@@ -9,10 +9,13 @@
 
 typedef enum {
     ORCA_NODE_NONE,
-    
-    ORCA_NODE_LIST,
-    ORCA_NODE_TOKENRANGE,
 
+    ORCA_NODE_LIST,
+    ORCA_NODE_PROGRAM,
+
+    ORCA_NODE_EXPR_STMT,
+
+    ORCA_NODE_TOKENRANGE,
     ORCA_NODE_INTEGER,
     ORCA_NODE_IDENTIFIER,
     ORCA_NODE_CALL,
@@ -57,6 +60,16 @@ typedef struct {
 
 typedef struct {
     orca_ast_base_t base;
+    orca_ast_node_t *stmts;
+} ast_program_t;
+
+typedef struct {
+    orca_ast_base_t base;
+    orca_ast_node_t *expr;
+} orca_ast_expr_stmt_t;
+
+typedef struct {
+    orca_ast_base_t base;
     orca_token_t *start;
     orca_token_t *end;
 } orca_ast_tokenrange_t;
@@ -91,6 +104,10 @@ void orca_ast_list_write(orca_ast_node_t **nodes, size_t depth, FILE *file);
 orca_ast_node_t *orca_ast_list_new();
 
 void orca_ast_list_append(orca_ast_node_t *node, orca_ast_node_t *elem);
+
+orca_ast_node_t *orca_ast_program_new(orca_ast_node_t *stmts);
+
+orca_ast_node_t *orca_ast_expr_stmt_new(orca_ast_node_t *expr);
 
 orca_ast_node_t *orca_ast_tokenrange_new(orca_token_t *start, 
                                          orca_token_t *end);
