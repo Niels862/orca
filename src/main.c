@@ -60,23 +60,39 @@ int test_parse(int argc, char *argv[]) {
 }
 
 void test_vm() {
-    orca_Object_t *intg = &orca_Int_new(42)->object;
-    orca_Object_t *consts[1];
-    consts[0] = intg;
+    orca_object_tracker_t consts;
+    orca_object_tracker_init(&consts);
+
+    orca_object_tracker_add(&consts, &orca_Int_new(0)->object);
+    orca_object_tracker_add(&consts, &orca_Int_new(42)->object);
 
     orca_instr_t instrs[] = {
         { ORCA_OP_LOAD_NULL,    0 },
-        { ORCA_OP_LOAD_CONST,   0 },
+        { ORCA_OP_LOAD_CONST,   1 },
         { ORCA_OP_TEMP_PRINT,   0 },
+        { ORCA_OP_LOAD_CONST,   0 },
         { ORCA_OP_EXIT,         0 }
     };
 
     orca_vm_t vm;
-    orca_vm_init(&vm, instrs, consts);
+    orca_vm_init(&vm, instrs, consts.objs);
 
-    orca_vm_run(&vm);
+    switch (setjmp(vm.state)) {
+        case ORCA_UNWIND_SETUP:
+            orca_vm_run(&vm);
+            break;
+
+        case ORCA_UNWIND_EXIT:
+            fprintf(stderr, "Exited with %ld\n", 
+                    ((orca_Int_t *)ORCA_POP(&vm))->value);
+            break;
+
+        default:
+            assert(1);
+    }
 
     orca_vm_destruct(&vm);
+    orca_object_tracker_destruct(&consts);
 }
 
 int main(int argc, char *argv[]) {

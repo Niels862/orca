@@ -9,6 +9,9 @@ void orca_object_tracker_init(orca_object_tracker_t *tracker) {
 }
 
 void orca_object_tracker_destruct(orca_object_tracker_t *tracker) {
+    for (size_t i = 0; i < tracker->size; i++) {
+        free(tracker->objs[i]);
+    }
     free(tracker->objs);
 }
 

@@ -1,5 +1,6 @@
 #include "vm.h"
 #include "util.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 void orca_vm_init(orca_vm_t *vm, orca_instr_t *instrs, orca_Object_t **consts) {
@@ -12,9 +13,10 @@ void orca_vm_init(orca_vm_t *vm, orca_instr_t *instrs, orca_Object_t **consts) {
 
 void orca_vm_destruct(orca_vm_t *vm) {
     orca_gc_destruct(&vm->gc);
+    free(vm->base);
 }
 
-void orca_vm_run(orca_vm_t *vm) {
+orca_Object_t *orca_vm_run(orca_vm_t *vm) {
     size_t ip = 0;
 
     while (1) {
@@ -23,25 +25,23 @@ void orca_vm_run(orca_vm_t *vm) {
         switch (instr.opcode) {
             case ORCA_OP_LOAD_CONST:
                 fprintf(stderr, "Loading %ld\n", ((orca_Int_t *)vm->consts[instr.data])->value);
-                *vm->top = vm->consts[instr.data];
-                vm->top++;
+                ORCA_PUSH(vm, vm->consts[instr.data]);
                 break;
 
             case ORCA_OP_LOAD_NULL:
-                *vm->top = NULL;
-                vm->top++;
+                ORCA_PUSH(vm, NULL);
                 break;
 
             case ORCA_OP_TEMP_PRINT:
-                vm->top--;
-                printf("[%ld]\n", ((orca_Int_t *)(*vm->top))->value);
+                printf("[%ld]\n", ((orca_Int_t *)ORCA_POP(vm))->value);
                 break;
 
             case ORCA_OP_EXIT:
-                return;
+                longjmp(vm->state, ORCA_UNWIND_EXIT);
         }
 
         ip++;
     }
-    ORCA_UNUSED(vm);
+
+    return NULL;
 }
